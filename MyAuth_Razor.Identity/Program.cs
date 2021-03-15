@@ -1,9 +1,7 @@
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -11,16 +9,38 @@ namespace MyAuth_Razor.Identity
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public async static Task Main(string[] args)
         {
-            CreateHostBuilder(args).Build().Run();
+            var host = CreateHostBuilder(args).Build();
+            using (var scope = host.Services.CreateScope())
+            {
+                var userManager = scope.ServiceProvider.GetService<UserManager<IdentityUser>>();
+                var roleManager = scope.ServiceProvider.GetService<RoleManager<IdentityRole>>();
+
+                if (!userManager.Users.Any())
+                {
+                    await roleManager.CreateAsync(new IdentityRole("User"));
+                    await roleManager.CreateAsync(new IdentityRole("Admin"));
+
+                    var admin = new IdentityUser { UserName = "admin@htl.at", Email = "admin@htl.at" };
+                    var user = new IdentityUser { UserName = "user@htl.at", Email = "user@htl.at" };
+
+                    var result = await userManager.CreateAsync(admin, "Admin12345.");
+                    await userManager.CreateAsync(user, "User67890.");
+
+                    await userManager.AddToRoleAsync(user, "User");
+                    await userManager.AddToRolesAsync(admin, new[] { "User", "Admin" });
+                }
+            }
+
+            host.Run();
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
-            Host.CreateDefaultBuilder(args)
-                .ConfigureWebHostDefaults(webBuilder =>
-                {
-                    webBuilder.UseStartup<Startup>();
-                });
+        Host.CreateDefaultBuilder(args)
+            .ConfigureWebHostDefaults(webBuilder =>
+            {
+                webBuilder.UseStartup<Startup>();
+            });
     }
 }

@@ -1,13 +1,11 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using MyAuth_Razor.Persistence;
 
 namespace MyAuth_Razor.Identity
 {
@@ -23,6 +21,23 @@ namespace MyAuth_Razor.Identity
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddDbContext<ApplicationDbContext>(configure =>
+            configure.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+
+            services.AddIdentity<IdentityUser, IdentityRole>(configure => {
+                configure.Password.RequireLowercase = true;
+                configure.Password.RequiredLength = 6;
+            })
+                .AddEntityFrameworkStores<ApplicationDbContext>()
+                .AddDefaultTokenProviders();
+
+            services.ConfigureApplicationCookie(configure =>
+            {
+                configure.Cookie.Name = "AuthCookie";
+                configure.LoginPath = "/Auth/Login";
+                configure.AccessDeniedPath = "/Auth/AccessDenied";
+            });
+
             services.AddRazorPages();
         }
 
@@ -45,6 +60,7 @@ namespace MyAuth_Razor.Identity
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

@@ -9,9 +9,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyAuth_Razor.Core", "MyAuth
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Utils", "Utils\Utils.csproj", "{FA5FE3F9-5B55-4E64-9083-73EFB1872EE2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyAuth_Razor.Identity", "MyAuth_Razor.Identity\MyAuth_Razor.Identity.csproj", "{FA684600-DF09-4FB4-B2F9-3035333B355A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyAuth_Razor.Identity", "MyAuth_Razor.Identity\MyAuth_Razor.Identity.csproj", "{FA684600-DF09-4FB4-B2F9-3035333B355A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyAuth_Razor.Persistence", "MyAuth_Razor.Persistence\MyAuth_Razor.Persistence.csproj", "{4D08E748-2211-497C-991C-7B7D65149906}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyAuth_Razor.Persistence", "MyAuth_Razor.Persistence\MyAuth_Razor.Persistence.csproj", "{4D08E748-2211-497C-991C-7B7D65149906}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
